@@ -23,15 +23,16 @@ arg1 = cmd_line(2)
 if cmd == "ajuda" then
 	-- Ajuda e comandos
 	print("")
-	print("Lista de comandos:")
-	print("------------------")
+	print("Lista de comandos:\n")
 	print("ajuda                    Mostra esta tela")
 	print("limpar                   Limpa a tela")
 	print("lista [removidos|<cpf>]  Exibe a lista de convidados ou")
-	print("                         verifica se um convidado esta na lista")
+	print("                           convidados removidos e verifica se um")
+	print("                           convidado esta na lista")
 	print("remover                  Remove um convidado da lista")
 	print("sair                     Finaliza o programa")
 	print("novo                     Adiciona um novo convidado a lista")
+	print("recomecar                Zera toda a lista de conviados atual")
 
 	goto cmd
 	
@@ -48,39 +49,46 @@ elseif cmd == "limpar" then
 elseif cmd == "lista" then
 	-- Mostra a lista de convidados
 	local lista = listaDeConvidados()
+	local cpf_pad = 15; nome_pad = 20
 
 	if arg1 == nil then
-		print("LISTA DE CONVIDADOS")
-		print("-------------------")
+		print("LISTA DE CONVIDADOS\n")
 
 		if tableLength(lista["convidados"]) == 0 then
 			print("Nenhum convidado na lista")
 		else
+			print(strPadR("CPF", cpf_pad) .. "Nome")
+			print(strPadR("---", cpf_pad) .. "----")
+
 			for index, item in ipairs(lista["convidados"]) do
-				print(item["cpf"] .. "   " .. item["nome"])
+				print(strPadR(item["cpf"], cpf_pad) .. item["nome"])
 			end
 		end
 	elseif arg1 == "removidos" then
-		print("LISTA DE CONVIDADOS REMOVIDOS")
-		print("-----------------------------")
+		print("LISTA DE CONVIDADOS REMOVIDOS\n")
 
 		if tableLength(lista["removidos"]) == 0 then
 			print("Nenhum convidado foi removido da lista")
 		else
+			print(strPadR("CPF", cpf_pad) .. strPadR("Nome", nome_pad) .. "Motivo")
+			print(strPadR("---", cpf_pad) .. strPadR("----", nome_pad) .. "------")
+
 			for index, item in ipairs(lista["removidos"]) do
-				print(item["cpf"] .. "   " .. item["nome"] .. "  (" .. item["motivo"] .. ")")
+				print(strPadR(item["cpf"], cpf_pad) .. strPadR(item["nome"], nome_pad) .. item["motivo"])
 			end
 		end
 	else
-		print("CONSULTA DE CONVIDADOS")
-		print("----------------------")
+		print("CONSULTA DE CONVIDADOS\n")
 
 		if not verificarConvidado(arg1) then
 			print("Nenhum convidado encontrado com o CPF '" .. arg1 .. "'")
 		else
+			print(strPadR("CPF", cpf_pad) .. "Nome")
+			print(strPadR("---", cpf_pad) .. "----")
+
 			for index, item in ipairs(lista["convidados"]) do
 				if item["cpf"] == arg1 then
-					print(item["cpf"] .. "   " .. item["nome"])
+					print(strPadR(item["cpf"], cpf_pad) .. item["nome"])
 				end
 			end
 		end
@@ -140,6 +148,12 @@ elseif cmd == "novo" then
 
 	print("")
 	print("(OK) Convidado incluido com sucesso!")
+
+elseif cmd == "recomecar" then
+	-- Zerar a lista de convidados atual
+	criarJson()
+
+	print("(OK) A lista de convidados foi apagada")
 
 else
 	if cmd == nil then

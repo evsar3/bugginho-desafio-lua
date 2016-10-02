@@ -6,15 +6,7 @@ json_db = "convidados.json"
 
 -- Cria o JSON se ele não existir
 if not fileExists(json_db) then
-	local file = io.open(json_db, "w")
-
-	local json = {
-		["convidados"] = {},
-		["removidos"] = {}
-	}
-
-	file:write(JSON:encode(json))
-	file:close()
+	criarJson()
 end
 
 -- --------------------------------------------------------------------
@@ -63,4 +55,16 @@ function verificarConvidado(cpf)
 	end
 
 	return ret
+end
+
+function criarJson()
+	local file = io.open(json_db, "w")
+
+	local json = {
+		["convidados"] = {},
+		["removidos"] = {}
+	}
+
+	file:write(JSON:encode(json))
+	file:close()
 end
