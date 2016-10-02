@@ -8,7 +8,12 @@ json_db = "convidados.json"
 if not fileExists(json_db) then
 	local file = io.open(json_db, "w")
 
-	file:write('{ "convidados": [], "removidos": [] }')
+	local json = {
+		["convidados"] = {},
+		["removidos"] = {}
+	}
+
+	file:write(JSON:encode(json))
 	file:close()
 end
 
@@ -22,7 +27,7 @@ function adicionarConvidado(nome, cpf)
 		["cpf"] = cpf
 	})
 
-	setFileContents(json_db, JSON:encode_pretty(lista))
+	setFileContents(json_db, JSON:encode(lista))
 end
 
 function removerConvidado(cpf, motivo)
@@ -42,7 +47,7 @@ function removerConvidado(cpf, motivo)
 
 	table.insert(lista["removidos"], convidado)
 
-	setFileContents(json_db, JSON:encode_pretty(lista))
+	setFileContents(json_db, JSON:encode(lista))
 end
 
 function listaDeConvidados()
