@@ -4,7 +4,7 @@ require "convidados"
 ::begin::
 print("Lista de Convidados v0.1.0")
 print("-------------------------------------------------------------------------------")
-print("Este projeto faz parte da série de desafios proposta pela pagina")
+print("Este projeto faz parte da serie de desafios proposta pela pagina")
 print("Bugguinho Developer (http://fb.com/BugginhoDeveloper) como uma forma de")
 print("estimular programadores a experimentar novas linguagens")
 print("")
@@ -37,7 +37,6 @@ if cmd == "ajuda" then
 	
 elseif cmd == "limpar" then
 	-- Limpa a tela
-	
 	if getOS() == "unix" then
 		os.execute("clear")
 	else
@@ -54,23 +53,35 @@ elseif cmd == "lista" then
 		print("LISTA DE CONVIDADOS")
 		print("-------------------")
 
-		for index, item in ipairs(lista["convidados"]) do
-			print(item["cpf"] .. "   " .. item["nome"])
+		if tableLength(lista["convidados"]) == 0 then
+			print("Nenhum convidado na lista")
+		else
+			for index, item in ipairs(lista["convidados"]) do
+				print(item["cpf"] .. "   " .. item["nome"])
+			end
 		end
 	elseif arg1 == "removidos" then
 		print("LISTA DE CONVIDADOS REMOVIDOS")
 		print("-----------------------------")
 
-		for index, item in ipairs(lista["removidos"]) do
-			print(item["cpf"] .. "   " .. item["nome"] .. "  (" .. item["motivo"] .. ")")
+		if tableLength(lista["removidos"]) == 0 then
+			print("Nenhum convidado foi removido da lista")
+		else
+			for index, item in ipairs(lista["removidos"]) do
+				print(item["cpf"] .. "   " .. item["nome"] .. "  (" .. item["motivo"] .. ")")
+			end
 		end
 	else
 		print("CONSULTA DE CONVIDADOS")
 		print("----------------------")
 
-		for index, item in ipairs(lista["convidados"]) do
-			if item["cpf"] == arg1 then
-				print(item["cpf"] .. "   " .. item["nome"])
+		if not verificarConvidado(arg1) then
+			print("Nenhum convidado encontrado com o CPF '" .. arg1 .. "'")
+		else
+			for index, item in ipairs(lista["convidados"]) do
+				if item["cpf"] == arg1 then
+					print(item["cpf"] .. "   " .. item["nome"])
+				end
 			end
 		end
 	end
@@ -100,7 +111,6 @@ elseif cmd == "remover" then
 
 elseif cmd == "sair" then
 	-- Finaliza o programa
-
 	return
 
 elseif cmd == "novo" then
@@ -132,7 +142,11 @@ elseif cmd == "novo" then
 	print("(OK) Convidado incluido com sucesso!")
 
 else
-	print("(!) Comando '" .. cmd .. "' invalido insira 'ajuda'")
+	if cmd == nil then
+		print("(!) Insira um comando ou 'ajuda'")
+	else
+		print("(!) Comando '" .. cmd .. "' invalido insira 'ajuda'")
+	end
 end
 
 goto cmd
